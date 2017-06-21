@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */; };
 		B83FC66F1EF05FB300BF1173 /* Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6651EF05FB300BF1173 /* Utils.framework */; };
 		B83FC6741EF05FB300BF1173 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83FC6731EF05FB300BF1173 /* UtilsTests.swift */; };
 		B83FC6761EF05FB300BF1173 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = B83FC6681EF05FB300BF1173 /* Utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B83FC6811EF0641E00BF1173 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83FC6801EF0641E00BF1173 /* ImageFetcher.swift */; };
 		B83FC6861EF06D3A00BF1173 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6831EF06D3A00BF1173 /* ReactiveCocoa.framework */; };
 		B83FC6871EF06D3A00BF1173 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6841EF06D3A00BF1173 /* ReactiveSwift.framework */; };
 		B83FC6881EF06D3A00BF1173 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6851EF06D3A00BF1173 /* Result.framework */; };
@@ -29,13 +29,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageFetcher.swift; path = Services/ImageFetcher.swift; sourceTree = "<group>"; };
 		B83FC6651EF05FB300BF1173 /* Utils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Utils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83FC6681EF05FB300BF1173 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		B83FC6691EF05FB300BF1173 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B83FC66E1EF05FB300BF1173 /* UtilsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83FC6731EF05FB300BF1173 /* UtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
 		B83FC6751EF05FB300BF1173 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B83FC6801EF0641E00BF1173 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageFetcher.swift; path = Services/ImageFetcher.swift; sourceTree = "<group>"; };
 		B83FC6831EF06D3A00BF1173 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		B83FC6841EF06D3A00BF1173 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
 		B83FC6851EF06D3A00BF1173 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		B83FC67F1EF0640B00BF1173 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				B83FC6801EF0641E00BF1173 /* ImageFetcher.swift */,
+				B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */,
 				B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */,
 			);
 			name = Services;
@@ -266,6 +266,7 @@
 				B83FC6811EF0641E00BF1173 /* ImageFetcher.swift in Sources */,
 				B8402F331F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift in Sources */,
 				B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */,
+				B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

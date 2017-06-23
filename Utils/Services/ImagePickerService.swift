@@ -25,18 +25,12 @@ public protocol ImagePickerServiceType {
     var imageSignal: Signal<UIImage, ImagePickerServiceError> { get }
     
     /**
-     Presents the camera to the user so it can take a picture. If the user didn't give permission to the app to use the camera
+     Presents the picker to the user so it can take or select a picture. If the user didn't give permission to the app to use the source type selected
         a prompt asking it will be shown.
-     - parameter permissionNotGranted: Block called when the user denies permission. If the user gives permission the camera will be shown.
+     - parameter source: Source type for the picker to show. Can be .camera or .photoLibrary.
+     - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
      */
-    func presentCameraTypeImagePickerController(_ permissionNotGranted: @escaping (Void) -> Void)
-    
-    /**
-     Presents the media library to the user so it can select a picture. If the user didn't give permission to the app to use the library
-        a prompt asking it will be shown.
-     - parameter permissionNotGranted: Block called when the user denies permission. If the user gives permission the library will be shown.
-     */
-    func presentGalleryTypeImagePickerController(_ permissionNotGranted: @escaping (Void) -> Void)
+    func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping (Void) -> Void)
     
     /**
      Tells if the device has a camera.
@@ -57,19 +51,14 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
         (imageSignal, _imageObserver) = Signal<UIImage, ImagePickerServiceError>.pipe()
     }
     
-    public func presentCameraTypeImagePickerController(_ permissionNotGranted: @escaping (Void) -> Void) {
-        if cameraIsAvailable {
-            hasCameraPermission().startWithValues { [unowned self] in
-                $0 ? self.presentImagePickerController(.camera) : permissionNotGranted()
-            }
-        } else {
-            _imageObserver.send(error: ImagePickerServiceError.sourceTypeNotAvailable)
-        }
-    }
-    
-    public func presentGalleryTypeImagePickerController(_ permissionNotGranted: @escaping (Void) -> Void) {
-        hasPhotosPermission().startWithValues { [unowned self] in
-            $0 ? self.presentImagePickerController(.photoLibrary) : permissionNotGranted()
+    public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping (Void) -> Void) {
+        switch source {
+        case .camera:
+            presentCameraTypeImagePickerController(onPermissionNotGranted)
+        case .photoLibrary:
+            presentGalleryTypeImagePickerController(onPermissionNotGranted)
+        default:
+            break
         }
     }
     
@@ -79,6 +68,35 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     
     deinit {
         _imageObserver.sendCompleted()
+    }
+}
+
+fileprivate extension ImagePickerService {
+    
+    fileprivate func presentCameraTypeImagePickerController(_ onPermissionNotGranted: @escaping (Void) -> Void) {
+        guard cameraIsAvailable else {
+            _imageObserver.send(error: ImagePickerServiceError.sourceTypeNotAvailable)
+            return
+        }
+        
+        hasCameraPermission().startWithValues { [unowned self] in
+            if $0 {
+                self.presentImagePickerController(.camera)
+            } else {
+                onPermissionNotGranted()
+            }
+        }
+    }
+    
+    fileprivate func presentGalleryTypeImagePickerController(_ onPermissionNotGranted: @escaping (Void) -> Void) {
+        hasPhotosPermission().startWithValues { [unowned self] in
+            if $0 {
+                self.presentImagePickerController(.photoLibrary)
+            } else {
+                onPermissionNotGranted()
+            }
+
+        }
     }
 }
 
@@ -115,14 +133,15 @@ fileprivate extension ImagePickerService {
 extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+                                      didFinishPickingImage image: UIImage,
+                                      editingInfo: [String : AnyObject]?) {
         _viewController?.dismiss(animated: true) { [unowned self] in
             self._imageObserver.send(value: image)
         }
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        _viewController?.dismiss(animated: true, completion: nil)
+        _viewController?.dismiss(animated: true, completion: .none)
     }
     
 }
@@ -135,7 +154,7 @@ fileprivate extension ImagePickerService {
         imagePickerController.allowsEditing = true
         imagePickerController.sourceType = sourceType
         
-        _viewController?.present(imagePickerController, animated: true, completion: nil)
+        _viewController?.present(imagePickerController, animated: true, completion: .none)
     }
     
 }

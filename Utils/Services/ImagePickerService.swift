@@ -8,9 +8,6 @@
 
 import ReactiveSwift
 import UIKit
-import AVFoundation
-import Photos
-import Result
 
 public enum ImagePickerServiceError: Error {
     
@@ -52,13 +49,13 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     }
     
     public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping (Void) -> Void) {
-        switch source {
-        case .camera:
-            presentCameraTypeImagePickerController(onPermissionNotGranted)
-        case .photoLibrary:
-            presentGalleryTypeImagePickerController(onPermissionNotGranted)
-        default:
-            break
+        source.isPermitted().startWithResult { [unowned self] in
+            switch $0 {
+            case .success(let permitted):
+                if permitted { self.presentImagePickerController(source) }
+                else { onPermissionNotGranted() }
+            case .failure(let error): self._imageObserver.send(error: error)
+            }
         }
     }
     
@@ -69,65 +66,6 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     deinit {
         _imageObserver.sendCompleted()
     }
-}
-
-fileprivate extension ImagePickerService {
-    
-    fileprivate func presentCameraTypeImagePickerController(_ onPermissionNotGranted: @escaping (Void) -> Void) {
-        guard cameraIsAvailable else {
-            _imageObserver.send(error: ImagePickerServiceError.sourceTypeNotAvailable)
-            return
-        }
-        
-        hasCameraPermission().startWithValues { [unowned self] in
-            if $0 {
-                self.presentImagePickerController(.camera)
-            } else {
-                onPermissionNotGranted()
-            }
-        }
-    }
-    
-    fileprivate func presentGalleryTypeImagePickerController(_ onPermissionNotGranted: @escaping (Void) -> Void) {
-        hasPhotosPermission().startWithValues { [unowned self] in
-            if $0 {
-                self.presentImagePickerController(.photoLibrary)
-            } else {
-                onPermissionNotGranted()
-            }
-
-        }
-    }
-}
-
-fileprivate extension ImagePickerService {
-    
-    fileprivate func hasCameraPermission() -> SignalProducer<Bool, NoError> {
-        return SignalProducer { observable, _ in
-            switch AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) {
-            case .notDetermined:
-                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {
-                    observable.send(value: $0)
-                }
-            case .authorized: observable.send(value: true)
-            case .denied, .restricted: observable.send(value: false)
-            }
-        }
-    }
-    
-    fileprivate func hasPhotosPermission() -> SignalProducer<Bool, NoError> {
-        return SignalProducer { observable, _ in
-            switch PHPhotoLibrary.authorizationStatus() {
-            case .notDetermined:
-                PHPhotoLibrary.requestAuthorization {
-                    observable.send(value: $0 == .authorized)
-                }
-            case .authorized: observable.send(value: true)
-            case .denied, .restricted: observable.send(value: false)
-            }
-        }
-    }
-    
 }
 
 extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

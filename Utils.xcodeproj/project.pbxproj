@@ -15,7 +15,8 @@
 		B83FC6871EF06D3A00BF1173 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6841EF06D3A00BF1173 /* ReactiveSwift.framework */; };
 		B83FC6881EF06D3A00BF1173 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6851EF06D3A00BF1173 /* Result.framework */; };
 		B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */; };
-		B8402F331F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8402F321F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift */; };
+		B845806C1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B845806A1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift */; };
+		B845806D1F7D59370018B9A6 /* URLSessionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +41,8 @@
 		B83FC6841EF06D3A00BF1173 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
 		B83FC6851EF06D3A00BF1173 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImagePickerService.swift; path = Services/ImagePickerService.swift; sourceTree = "<group>"; };
-		B8402F321F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIImagePickerControllerSourceTypeExtension.swift; path = Extensions/UIImagePickerControllerSourceTypeExtension.swift; sourceTree = "<group>"; };
+		B845806A1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImagePickerControllerSourceTypeExtension.swift; sourceTree = "<group>"; };
+		B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +89,7 @@
 		B83FC6671EF05FB300BF1173 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				B8402F341F0162500027639D /* Extensions */,
+				B84580691F7D59370018B9A6 /* Extensions */,
 				B83FC67F1EF0640B00BF1173 /* Services */,
 				B83FC6681EF05FB300BF1173 /* Utils.h */,
 				B83FC6691EF05FB300BF1173 /* Info.plist */,
@@ -123,12 +125,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B8402F341F0162500027639D /* Extensions */ = {
+		B84580691F7D59370018B9A6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B8402F321F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift */,
+				B845806A1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift */,
+				B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */,
 			);
-			name = Extensions;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,8 +266,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B83FC6811EF0641E00BF1173 /* ImageFetcher.swift in Sources */,
-				B8402F331F0161730027639D /* UIImagePickerControllerSourceTypeExtension.swift in Sources */,
+				B845806D1F7D59370018B9A6 /* URLSessionExtension.swift in Sources */,
+				B845806C1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift in Sources */,
 				B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */,
 				B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */,
 			);

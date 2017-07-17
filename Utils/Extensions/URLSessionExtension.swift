@@ -10,6 +10,9 @@ import Foundation
 
 public extension URLSession {
     
+    /**
+     Returns a URLSession that uses .returnCacheDataElseLoad as cache policy.
+     */
     public static func cacheSession() -> URLSession {
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .returnCacheDataElseLoad

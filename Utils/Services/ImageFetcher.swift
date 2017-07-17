@@ -11,6 +11,12 @@ import ReactiveSwift
 
 public protocol ImageFetcherType {
     
+    /**
+     Fetches an image asynchronously from a URL, returning a value or an error in the SignalProducer when done.
+     - parameter imageURL: the url of the image to fetch.
+     - parameter session: the URLSession to use to make the request. Default: URLSession.shared.
+     You can use URLSession.cacheSession to use .returnCacheDataElseLoad cache policy.
+     */
     func fetchImage(_ imageURL: URL, with session: URLSession) -> SignalProducer<UIImage, ImageFetcherError>
     
 }
@@ -22,12 +28,6 @@ public enum ImageFetcherError: Error {
 
 public class ImageFetcher: ImageFetcherType {
     
-    /**
-     Fetches an image asynchronously from a URL, returning a value or an error in the SignalProducer when done.
-     - parameter imageURL: the url of the image to fetch.
-     - parameter session: the URLSession to use to make the request. Default: URLSession.shared
-        You can use URLSession.cacheSession to use .returnCacheDataElseLoad cache policy.
-     */
     public func fetchImage(_ imageURL: URL, with session: URLSession = URLSession.shared) -> SignalProducer<UIImage, ImageFetcherError> {
         return session
             .reactive.data(with: URLRequest(url: imageURL))

@@ -27,7 +27,7 @@ public protocol ImagePickerServiceType {
      - parameter source: Source type for the picker to show. Can be .camera or .photoLibrary.
      - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
      */
-    func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping (Void) -> Void)
+    func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping () -> Void)
     
     /**
      Tells if the device has a camera.
@@ -48,7 +48,7 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
         (imageSignal, _imageObserver) = Signal<UIImage, ImagePickerServiceError>.pipe()
     }
     
-    public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping (Void) -> Void) {
+    public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping () -> Void) {
         source.isPermitted().startWithResult { [unowned self] in
             switch $0 {
             case .success(let permitted):

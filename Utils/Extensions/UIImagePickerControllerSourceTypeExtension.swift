@@ -29,9 +29,9 @@ fileprivate extension UIImagePickerControllerSourceType {
 
     fileprivate func hasCameraPermission() -> SignalProducer<Bool, ImagePickerServiceError> {
         return SignalProducer { observable, _ in
-            switch AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) {
+            switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
             case .notDetermined:
-                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {
+                AVCaptureDevice.requestAccess(for: AVMediaType.video) {
                     observable.send(value: $0)
                 }
             case .authorized: observable.send(value: true)

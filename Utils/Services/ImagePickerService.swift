@@ -43,7 +43,7 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     
     fileprivate weak var _viewController: UIViewController?
     
-    init(viewController: UIViewController) {
+    public init(viewController: UIViewController) {
         _viewController = viewController
         (imageSignal, _imageObserver) = Signal<UIImage, ImagePickerServiceError>.pipe()
     }

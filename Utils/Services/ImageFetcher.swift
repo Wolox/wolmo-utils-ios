@@ -37,6 +37,8 @@ public enum ImageFetcherError: Error {
  It uses the shared URLSession by default.
 */
 public class ImageFetcher: ImageFetcherType {
+
+    public init() {}
     
     public func fetchImage(_ imageURL: URL, with session: URLSession = URLSession.shared) -> SignalProducer<UIImage, ImageFetcherError> {
         return session

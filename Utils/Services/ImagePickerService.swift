@@ -50,6 +50,7 @@ public protocol MediaPickerServiceType {
      Presents the picker to the user so it can take or select a picture or other media.
      If the user didn't give permission to the app to use the source type selected a prompt asking it will be shown.
      - parameter source: Source type for the picker to show. Can be .camera or .photoLibrary.
+     - parameter media: Media types that should be shown in the picker for the user to choose from.
      - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
      */
     func presentImagePickerController(from source: UIImagePickerControllerSourceType,

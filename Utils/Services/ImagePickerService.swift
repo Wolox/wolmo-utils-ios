@@ -79,19 +79,14 @@ extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationContr
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         _viewController?.dismiss(animated: true) { [unowned self] in
-            let type = info[UIImagePickerControllerMediaType] as! String
-            let ImageType = (kUTTypeImage as NSString) as String
-            let VideoType = (kUTTypeMovie as NSString) as String
+            let type = info[UIImagePickerControllerMediaType] as! CFString
 
-            switch type {
-            case ImageType: self._imageObserver.send(value: .image(self.getImage(from: info)!))
-            case VideoType: self._imageObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
-            default:
-                if let image = self.getImage(from: info) {
-                    self._imageObserver.send(value: .image(image))
-                } else {
-                    self._imageObserver.send(value: .other(info))
-                }
+            if UTTypeConformsTo(type, kUTTypeImage) {
+                self._imageObserver.send(value: .image(self.getImage(from: info)!))
+            } else if UTTypeConformsTo(type, kUTTypeAudiovisualContent) {
+                self._imageObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
+            } else {
+                self._imageObserver.send(value: .other(info))
             }
         }
     }

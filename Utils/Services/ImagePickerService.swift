@@ -146,7 +146,7 @@ fileprivate extension MediaPickerMediaType {
     fileprivate var mediaTypeString: CFString {
         switch self {
         case .image: return kUTTypeImage
-        case .video: return kUTTypeAudiovisualContent
+        case .video: return kUTTypeMovie
         case .other(let typeString): return typeString
         }
     }

@@ -14,7 +14,7 @@ import Result
 
 internal extension UIImagePickerControllerSourceType {
     
-    internal func isPermitted() -> SignalProducer<Bool, ImagePickerServiceError> {
+    internal func isPermitted() -> SignalProducer<Bool, MediaPickerServiceError> {
         switch self {
         case .camera:
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return SignalProducer(error: .sourceTypeNotAvailable) }
@@ -27,7 +27,7 @@ internal extension UIImagePickerControllerSourceType {
 
 fileprivate extension UIImagePickerControllerSourceType {
 
-    fileprivate func hasCameraPermission() -> SignalProducer<Bool, ImagePickerServiceError> {
+    fileprivate func hasCameraPermission() -> SignalProducer<Bool, MediaPickerServiceError> {
         return SignalProducer { observable, _ in
             switch AVCaptureDevice.authorizationStatus(for: AVMediaType.video) {
             case .notDetermined:
@@ -40,7 +40,7 @@ fileprivate extension UIImagePickerControllerSourceType {
         }
     }
     
-    fileprivate func hasPhotosPermission() -> SignalProducer<Bool, ImagePickerServiceError> {
+    fileprivate func hasPhotosPermission() -> SignalProducer<Bool, MediaPickerServiceError> {
         return SignalProducer { observable, _ in
             switch PHPhotoLibrary.authorizationStatus() {
             case .notDetermined:

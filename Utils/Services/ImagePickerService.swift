@@ -10,7 +10,7 @@ import ReactiveSwift
 import UIKit
 import MobileCoreServices
 
-public enum ImagePickerServiceError: Error {
+public enum MediaPickerServiceError: Error {
     
     case sourceTypeNotAvailable
     
@@ -20,7 +20,7 @@ public enum ImagePickerServiceError: Error {
  Enum to represent all media types an UIImagePickerController can get.
  For full details, please visit: https://developer.apple.com/documentation/mobilecoreservices/uttype
  */
-public enum ImagePickerMediaType {
+public enum MediaPickerMediaType {
     case image
     case video
     case other(CFString)
@@ -31,7 +31,7 @@ public enum ImagePickerMediaType {
  Some types are particularly identified, for others you can use its dictionary to get information.
  For more information refer to `func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])`.
  */
-public enum ImagePickerMedia {
+public enum MediaPickerMedia {
     case image(UIImage)
     case video(URL)
     case other([String : Any])
@@ -40,11 +40,11 @@ public enum ImagePickerMedia {
 /**
  Service that provides a way to get media.
  */
-public protocol ImagePickerServiceType {
+public protocol MediaPickerServiceType {
     /**
      Observe imageSignal to get the ImagePickerMedia selected by the user
      */
-    var imageSignal: Signal<ImagePickerMedia, ImagePickerServiceError> { get }
+    var mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError> { get }
     
     /**
      Presents the picker to the user so it can take or select a picture or other media.
@@ -53,7 +53,7 @@ public protocol ImagePickerServiceType {
      - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
      */
     func presentImagePickerController(from source: UIImagePickerControllerSourceType,
-                                      for media: [ImagePickerMediaType],
+                                      for media: [MediaPickerMediaType],
                                       _ onPermissionNotGranted: @escaping () -> Void)
     
     /**
@@ -63,27 +63,27 @@ public protocol ImagePickerServiceType {
 }
 
 @objc
-public final class ImagePickerService: NSObject, ImagePickerServiceType {
+public final class MediaPickerService: NSObject, MediaPickerServiceType {
     
-    public let imageSignal: Signal<ImagePickerMedia, ImagePickerServiceError>
-    fileprivate let _imageObserver: Signal<ImagePickerMedia, ImagePickerServiceError>.Observer
+    public let mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError>
+    fileprivate let _mediaObserver: Signal<MediaPickerMedia, MediaPickerServiceError>.Observer
     
     fileprivate weak var _viewController: UIViewController?
     
     public init(viewController: UIViewController) {
         _viewController = viewController
-        (imageSignal, _imageObserver) = Signal<ImagePickerMedia, ImagePickerServiceError>.pipe()
+        (mediaSignal, _mediaObserver) = Signal<MediaPickerMedia, MediaPickerServiceError>.pipe()
     }
     
     public func presentImagePickerController(from source: UIImagePickerControllerSourceType,
-                                             for media: [ImagePickerMediaType],
+                                             for media: [MediaPickerMediaType],
                                              _ onPermissionNotGranted: @escaping () -> Void) {
         source.isPermitted().startWithResult { [unowned self] in
             switch $0 {
             case .success(let permitted):
                 if permitted { self.presentImagePickerController(source: source, media: media) }
                 else { onPermissionNotGranted() }
-            case .failure(let error): self._imageObserver.send(error: error)
+            case .failure(let error): self._mediaObserver.send(error: error)
             }
         }
     }
@@ -93,22 +93,22 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     }
     
     deinit {
-        _imageObserver.sendCompleted()
+        _mediaObserver.sendCompleted()
     }
 }
 
-extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension MediaPickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         _viewController?.dismiss(animated: true) { [unowned self] in
             let type = info[UIImagePickerControllerMediaType] as! CFString
 
-            if UTTypeConformsTo(type, ImagePickerMediaType.image.mediaTypeString) {
-                self._imageObserver.send(value: .image(self.getImage(from: info)!))
-            } else if UTTypeConformsTo(type, ImagePickerMediaType.video.mediaTypeString) {
-                self._imageObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
+            if UTTypeConformsTo(type, MediaPickerMediaType.image.mediaTypeString) {
+                self._mediaObserver.send(value: .image(self.getImage(from: info)!))
+            } else if UTTypeConformsTo(type, MediaPickerMediaType.video.mediaTypeString) {
+                self._mediaObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
             } else {
-                self._imageObserver.send(value: .other(info))
+                self._mediaObserver.send(value: .other(info))
             }
         }
     }
@@ -126,9 +126,9 @@ extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationContr
     
 }
 
-fileprivate extension ImagePickerService {
+fileprivate extension MediaPickerService {
     
-    fileprivate func presentImagePickerController(source sourceType: UIImagePickerControllerSourceType, media mediaTypes: [ImagePickerMediaType]) {
+    fileprivate func presentImagePickerController(source sourceType: UIImagePickerControllerSourceType, media mediaTypes: [MediaPickerMediaType]) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
@@ -140,7 +140,7 @@ fileprivate extension ImagePickerService {
     
 }
 
-fileprivate extension ImagePickerMediaType {
+fileprivate extension MediaPickerMediaType {
 
     fileprivate var mediaTypeString: CFString {
         switch self {

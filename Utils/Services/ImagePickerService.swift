@@ -8,26 +8,53 @@
 
 import ReactiveSwift
 import UIKit
+import MobileCoreServices
 
-public enum ImagePickerServiceError: Error {
+public enum MediaPickerServiceError: Error {
     
     case sourceTypeNotAvailable
     
 }
 
-public protocol ImagePickerServiceType {
+/**
+ Enum to represent all media types an UIImagePickerController can get.
+ For full details, please visit: https://developer.apple.com/documentation/mobilecoreservices/uttype
+ */
+public enum MediaPickerMediaType {
+    case image
+    case video
+    case other(CFString)
+}
+
+/**
+ Enum to represent all possible medias an UIImagePickerController can get.
+ Some types are particularly identified, for others you can use its dictionary to get information.
+ For more information refer to `func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])`.
+ */
+public enum MediaPickerMedia {
+    case image(UIImage)
+    case video(URL)
+    case other([String : Any])
+}
+
+/**
+ Service that provides a way to get media.
+ */
+public protocol MediaPickerServiceType {
     /**
-     Observe imageSignal to get the UIImage selected by the user
+     Observe imageSignal to get the ImagePickerMedia selected by the user
      */
-    var imageSignal: Signal<UIImage, ImagePickerServiceError> { get }
+    var mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError> { get }
     
     /**
-     Presents the picker to the user so it can take or select a picture. If the user didn't give permission to the app to use the source type selected
-        a prompt asking it will be shown.
+     Presents the picker to the user so it can take or select a picture or other media.
+     If the user didn't give permission to the app to use the source type selected a prompt asking it will be shown.
      - parameter source: Source type for the picker to show. Can be .camera or .photoLibrary.
      - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
      */
-    func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping () -> Void)
+    func presentImagePickerController(from source: UIImagePickerControllerSourceType,
+                                      for media: [MediaPickerMediaType],
+                                      _ onPermissionNotGranted: @escaping () -> Void)
     
     /**
      Tells if the device has a camera.
@@ -36,25 +63,27 @@ public protocol ImagePickerServiceType {
 }
 
 @objc
-public final class ImagePickerService: NSObject, ImagePickerServiceType {
+public final class MediaPickerService: NSObject, MediaPickerServiceType {
     
-    public let imageSignal: Signal<UIImage, ImagePickerServiceError>
-    fileprivate let _imageObserver: Signal<UIImage, ImagePickerServiceError>.Observer
+    public let mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError>
+    fileprivate let _mediaObserver: Signal<MediaPickerMedia, MediaPickerServiceError>.Observer
     
     fileprivate weak var _viewController: UIViewController?
     
     public init(viewController: UIViewController) {
         _viewController = viewController
-        (imageSignal, _imageObserver) = Signal<UIImage, ImagePickerServiceError>.pipe()
+        (mediaSignal, _mediaObserver) = Signal<MediaPickerMedia, MediaPickerServiceError>.pipe()
     }
     
-    public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping () -> Void) {
+    public func presentImagePickerController(from source: UIImagePickerControllerSourceType,
+                                             for media: [MediaPickerMediaType],
+                                             _ onPermissionNotGranted: @escaping () -> Void) {
         source.isPermitted().startWithResult { [unowned self] in
             switch $0 {
             case .success(let permitted):
-                if permitted { self.presentImagePickerController(source) }
+                if permitted { self.presentImagePickerController(source: source, media: media) }
                 else { onPermissionNotGranted() }
-            case .failure(let error): self._imageObserver.send(error: error)
+            case .failure(let error): self._mediaObserver.send(error: error)
             }
         }
     }
@@ -64,18 +93,31 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
     }
     
     deinit {
-        _imageObserver.sendCompleted()
+        _mediaObserver.sendCompleted()
     }
 }
 
-extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    public func imagePickerController(_ picker: UIImagePickerController,
-                                      didFinishPickingImage image: UIImage,
-                                      editingInfo: [String : AnyObject]?) {
+extension MediaPickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         _viewController?.dismiss(animated: true) { [unowned self] in
-            self._imageObserver.send(value: image)
+            let type = info[UIImagePickerControllerMediaType] as! CFString
+
+            if UTTypeConformsTo(type, MediaPickerMediaType.image.mediaTypeString) {
+                self._mediaObserver.send(value: .image(self.getImage(from: info)!))
+            } else if UTTypeConformsTo(type, MediaPickerMediaType.video.mediaTypeString) {
+                self._mediaObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
+            } else {
+                self._mediaObserver.send(value: .other(info))
+            }
         }
+    }
+
+    private func getImage(from info: [String : Any]) -> UIImage? {
+        if let image = (info[UIImagePickerControllerEditedImage] as? UIImage) {
+            return image
+        }
+        return info[UIImagePickerControllerOriginalImage] as? UIImage
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -84,15 +126,28 @@ extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationContr
     
 }
 
-fileprivate extension ImagePickerService {
+fileprivate extension MediaPickerService {
     
-    fileprivate func presentImagePickerController(_ sourceType: UIImagePickerControllerSourceType) {
+    fileprivate func presentImagePickerController(source sourceType: UIImagePickerControllerSourceType, media mediaTypes: [MediaPickerMediaType]) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
         imagePickerController.sourceType = sourceType
+        imagePickerController.mediaTypes = mediaTypes.map { ($0.mediaTypeString as NSString) as String }
         
         _viewController?.present(imagePickerController, animated: true, completion: .none)
     }
     
+}
+
+fileprivate extension MediaPickerMediaType {
+
+    fileprivate var mediaTypeString: CFString {
+        switch self {
+        case .image: return kUTTypeImage
+        case .video: return kUTTypeAudiovisualContent
+        case .other(let typeString): return typeString
+        }
+    }
+
 }

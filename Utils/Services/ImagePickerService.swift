@@ -8,6 +8,7 @@
 
 import ReactiveSwift
 import UIKit
+import MobileCoreServices
 
 public enum ImagePickerServiceError: Error {
     
@@ -15,11 +16,17 @@ public enum ImagePickerServiceError: Error {
     
 }
 
+public enum ImagePickerMedia {
+    case image(UIImage)
+    case video(URL)
+    case other([String : Any])
+}
+
 public protocol ImagePickerServiceType {
     /**
-     Observe imageSignal to get the UIImage selected by the user
+     Observe imageSignal to get the ImagePickerMedia selected by the user
      */
-    var imageSignal: Signal<UIImage, ImagePickerServiceError> { get }
+    var imageSignal: Signal<ImagePickerMedia, ImagePickerServiceError> { get }
     
     /**
      Presents the picker to the user so it can take or select a picture. If the user didn't give permission to the app to use the source type selected
@@ -38,14 +45,14 @@ public protocol ImagePickerServiceType {
 @objc
 public final class ImagePickerService: NSObject, ImagePickerServiceType {
     
-    public let imageSignal: Signal<UIImage, ImagePickerServiceError>
-    fileprivate let _imageObserver: Signal<UIImage, ImagePickerServiceError>.Observer
+    public let imageSignal: Signal<ImagePickerMedia, ImagePickerServiceError>
+    fileprivate let _imageObserver: Signal<ImagePickerMedia, ImagePickerServiceError>.Observer
     
     fileprivate weak var _viewController: UIViewController?
     
     public init(viewController: UIViewController) {
         _viewController = viewController
-        (imageSignal, _imageObserver) = Signal<UIImage, ImagePickerServiceError>.pipe()
+        (imageSignal, _imageObserver) = Signal<ImagePickerMedia, ImagePickerServiceError>.pipe()
     }
     
     public func presentImagePickerController(for source: UIImagePickerControllerSourceType, _ onPermissionNotGranted: @escaping () -> Void) {
@@ -69,13 +76,31 @@ public final class ImagePickerService: NSObject, ImagePickerServiceType {
 }
 
 extension ImagePickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    public func imagePickerController(_ picker: UIImagePickerController,
-                                      didFinishPickingImage image: UIImage,
-                                      editingInfo: [String : AnyObject]?) {
+
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         _viewController?.dismiss(animated: true) { [unowned self] in
-            self._imageObserver.send(value: image)
+            let type = info[UIImagePickerControllerMediaType] as! String
+            let ImageType = (kUTTypeImage as NSString) as String
+            let VideoType = (kUTTypeMovie as NSString) as String
+
+            switch type {
+            case ImageType: self._imageObserver.send(value: .image(self.getImage(from: info)!))
+            case VideoType: self._imageObserver.send(value: .video(info[UIImagePickerControllerMediaURL] as! URL))
+            default:
+                if let image = self.getImage(from: info) {
+                    self._imageObserver.send(value: .image(image))
+                } else {
+                    self._imageObserver.send(value: .other(info))
+                }
+            }
         }
+    }
+
+    private func getImage(from info: [String : Any]) -> UIImage? {
+        if let image = (info[UIImagePickerControllerEditedImage] as? UIImage) {
+            return image
+        }
+        return info[UIImagePickerControllerOriginalImage] as? UIImage
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

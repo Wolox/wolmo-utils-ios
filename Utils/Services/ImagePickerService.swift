@@ -70,9 +70,16 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
     fileprivate let _mediaObserver: Signal<MediaPickerMedia, MediaPickerServiceError>.Observer
     
     fileprivate weak var _viewController: UIViewController?
-    
-    public init(viewController: UIViewController) {
+    fileprivate let _allowsEditing: Bool
+
+    /**
+     Initializes a MediaPickerService ready to use.
+     - parameter viewController: UIViewController where to present the UIImagePickerViewController
+     - parameter allowsEditing: Indicates whether the UIImagePickerViewController allows editing like cropping and zooming.
+     */
+    public init(viewController: UIViewController, allowsEditing: Bool = false) {
         _viewController = viewController
+        _allowsEditing = allowsEditing
         (mediaSignal, _mediaObserver) = Signal<MediaPickerMedia, MediaPickerServiceError>.pipe()
     }
     
@@ -132,7 +139,7 @@ fileprivate extension MediaPickerService {
     fileprivate func presentImagePickerController(source sourceType: UIImagePickerControllerSourceType, media mediaTypes: [MediaPickerMediaType]) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
+        imagePickerController.allowsEditing = _allowsEditing
         imagePickerController.sourceType = sourceType
         imagePickerController.mediaTypes = mediaTypes.map { ($0.mediaTypeString as NSString) as String }
         
@@ -146,7 +153,7 @@ fileprivate extension MediaPickerMediaType {
     fileprivate var mediaTypeString: CFString {
         switch self {
         case .image: return kUTTypeImage
-        case .video: return kUTTypeAudiovisualContent
+        case .video: return kUTTypeMovie
         case .other(let typeString): return typeString
         }
     }

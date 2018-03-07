@@ -9,22 +9,22 @@
 import Foundation
 import UIKit
 
-extension UIView {
+public extension UIView {
     
-    enum Position {
+    public enum Position {
         case back
         case front
     }
     
-    func simpleAnimation() -> SimpleAnimation {
+    public func simpleAnimation() -> SimpleAnimation {
         return SimpleAnimation(view: self)
     }
     
-    func mixedAnimation(withDuration duration: TimeInterval) -> MixedAnimation {
+    public func mixedAnimation(withDuration duration: TimeInterval) -> MixedAnimation {
         return MixedAnimation(view: self, duration: duration)
     }
     
-    func chainedAnimation(loop: Bool = false, completion: @escaping () -> () = { }) -> ChainedAnimation {
+    public func chainedAnimation(loop: Bool = false, completion: @escaping () -> () = { }) -> ChainedAnimation {
         return ChainedAnimation(view: self, loop: loop, completion: completion)
     }
     

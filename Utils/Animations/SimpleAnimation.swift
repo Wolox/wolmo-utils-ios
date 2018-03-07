@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SimpleAnimation {
+open class SimpleAnimation {
     let view: UIView
     
     var animations: [Animation] = []
@@ -21,26 +21,26 @@ class SimpleAnimation {
     
     // MARK: - Transforms
     
-    func transformIdentity(withDuration duration: TimeInterval) -> SimpleAnimation {
+    public func transformIdentity(withDuration duration: TimeInterval) -> SimpleAnimation {
         let transform = CGAffineTransform.identity
         animations.append(Animation(transform: transform, duration: duration))
         return self
     }
     
-    func transform(withDuration duration: TimeInterval, translationX: CGFloat, translationY: CGFloat) -> SimpleAnimation {
+    public func transform(withDuration duration: TimeInterval, translationX: CGFloat, translationY: CGFloat) -> SimpleAnimation {
         let transform = CGAffineTransform(translationX: translationX, y: translationY)
         animations.append(Animation(transform: transform, duration: duration))
         return self
     }
     
-    func transform(withDuration duration: TimeInterval, rotationAngle: CGFloat) -> SimpleAnimation {
+    public func transform(withDuration duration: TimeInterval, rotationAngle: CGFloat) -> SimpleAnimation {
         let angleInRadians = (rotationAngle * CGFloat.pi) / 180.0;
         let transform = CGAffineTransform(rotationAngle: angleInRadians)
         animations.append(Animation(transform: transform, duration: duration))
         return self
     }
     
-    func transform(withDuration duration: TimeInterval, scaleX: CGFloat, scaleY: CGFloat) -> SimpleAnimation {
+    public func transform(withDuration duration: TimeInterval, scaleX: CGFloat, scaleY: CGFloat) -> SimpleAnimation {
         let transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
         animations.append(Animation(transform: transform, duration: duration))
         return self
@@ -48,7 +48,7 @@ class SimpleAnimation {
     
     // MARK: Actions
     
-    func action(withDuration duration: TimeInterval, positionX: CGFloat, positionY: CGFloat) -> SimpleAnimation {
+    public func action(withDuration duration: TimeInterval, positionX: CGFloat, positionY: CGFloat) -> SimpleAnimation {
         let action = {
             self.view.center = CGPoint(x: positionX, y: positionY)
         }
@@ -56,7 +56,7 @@ class SimpleAnimation {
         return self
     }
     
-    func action(withDuration duration: TimeInterval, translateX: CGFloat, translateY: CGFloat) -> SimpleAnimation {
+    public func action(withDuration duration: TimeInterval, translateX: CGFloat, translateY: CGFloat) -> SimpleAnimation {
         let action = {
             self.view.center = CGPoint(x: self.view.center.x + translateX, y: self.view.center.y + translateY)
         }
@@ -64,7 +64,7 @@ class SimpleAnimation {
         return self
     }
     
-    func action(withDuration duration: TimeInterval, scaleX: CGFloat, scaleY: CGFloat) -> SimpleAnimation {
+    public func action(withDuration duration: TimeInterval, scaleX: CGFloat, scaleY: CGFloat) -> SimpleAnimation {
         let action = {
             let center = self.view.center
             self.view.frame = CGRect(x: self.view.frame.origin.x,
@@ -77,7 +77,7 @@ class SimpleAnimation {
         return self
     }
     
-    func action(withDuration duration: TimeInterval, alpha: CGFloat) -> SimpleAnimation {
+    public func action(withDuration duration: TimeInterval, alpha: CGFloat) -> SimpleAnimation {
         let action = {
             self.view.alpha = alpha
         }
@@ -85,7 +85,7 @@ class SimpleAnimation {
         return self
     }
     
-    func action(withDuration duration: TimeInterval, moveTo position: UIView.Position) -> SimpleAnimation {
+    public func action(withDuration duration: TimeInterval, moveTo position: UIView.Position) -> SimpleAnimation {
         let action = {
             switch position {
             case .back:
@@ -100,7 +100,7 @@ class SimpleAnimation {
     
     // MARK: - Start
     
-    func startAnimation(completion: @escaping (Bool) -> Void = { _ in }) {
+    public func startAnimation(completion: @escaping (Bool) -> Void = { _ in }) {
         self.completion = completion
         if animations.count > 0 {
             let animation = animations.remove(at: 0)

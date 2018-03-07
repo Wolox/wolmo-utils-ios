@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ChainedAnimation {
+open class ChainedAnimation {
     let view: UIView
     let loop: Bool
     let completion: () -> ()
@@ -26,19 +26,19 @@ class ChainedAnimation {
     
     // MARK: - Add Methods
     
-    func add(animation: MixedAnimation) -> ChainedAnimation {
+    public func add(animation: MixedAnimation) -> ChainedAnimation {
         simpleAnimations.append(animation)
         return self
     }
     
-    func add(animation: SimpleAnimation) -> ChainedAnimation {
+    public func add(animation: SimpleAnimation) -> ChainedAnimation {
         simpleAnimations.append(animation)
         return self
     }
     
     // MARK: - Start Methods
     
-    func startAnimation() {
+    public func startAnimation() {
         if let mixedAnimation = simpleAnimations[currentAnimation] as? MixedAnimation {
             mixedAnimation.startAnimation(completion: animationCompletion)
         } else if let simpleAnimation = simpleAnimations[currentAnimation] as? SimpleAnimation {

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MixedAnimation {
+open class MixedAnimation {
     let duration: TimeInterval
     let view: UIView
     
@@ -23,30 +23,30 @@ class MixedAnimation {
     
     // MARK: - Transforms
     
-    func transformIdentity() -> MixedAnimation {
+    public func transformIdentity() -> MixedAnimation {
         transformations.append(CGAffineTransform.identity)
         return self
     }
     
-    func transform(translationX: CGFloat, translationY: CGFloat) -> MixedAnimation {
+    public func transform(translationX: CGFloat, translationY: CGFloat) -> MixedAnimation {
         transformations.append(CGAffineTransform(translationX: translationX, y: translationY))
         return self
     }
     
-    func transform(rotationAngle: CGFloat) -> MixedAnimation {
+    public func transform(rotationAngle: CGFloat) -> MixedAnimation {
         let angleInRadians = (rotationAngle * CGFloat.pi) / 180.0;
         transformations.append(CGAffineTransform(rotationAngle: angleInRadians))
         return self
     }
     
-    func transform(scaleX: CGFloat, scaleY: CGFloat) -> MixedAnimation {
+    public func transform(scaleX: CGFloat, scaleY: CGFloat) -> MixedAnimation {
         transformations.append(CGAffineTransform(scaleX: scaleX, y: scaleY))
         return self
     }
     
     // MARK: - Actions
     
-    func action(positionX: CGFloat, positionY: CGFloat) -> MixedAnimation {
+    public func action(positionX: CGFloat, positionY: CGFloat) -> MixedAnimation {
         actions.append {
             self.view.center = CGPoint(x: positionX, y: positionY)
         }
@@ -54,14 +54,14 @@ class MixedAnimation {
         return self
     }
     
-    func action(translateX: CGFloat, translateY: CGFloat) -> MixedAnimation {
+    public func action(translateX: CGFloat, translateY: CGFloat) -> MixedAnimation {
         actions.append {
             self.view.center = CGPoint(x: self.view.center.x + translateX, y: self.view.center.y + translateY)
         }
         return self
     }
     
-    func action(scaleX: CGFloat, scaleY: CGFloat) -> MixedAnimation {
+    public func action(scaleX: CGFloat, scaleY: CGFloat) -> MixedAnimation {
         actions.append {
             let center = self.view.center
             self.view.frame = CGRect(x: self.view.frame.origin.x,
@@ -73,14 +73,14 @@ class MixedAnimation {
         return self
     }
     
-    func action(alpha: CGFloat) -> MixedAnimation {
+    public func action(alpha: CGFloat) -> MixedAnimation {
         actions.append({
             self.view.alpha = alpha
         })
         return self
     }
     
-    func action(moveTo position: UIView.Position) -> MixedAnimation {
+   public func action(moveTo position: UIView.Position) -> MixedAnimation {
         actions.append({
             switch position {
             case .back:
@@ -92,7 +92,7 @@ class MixedAnimation {
         return self
     }
     
-    func startAnimation(completion: ((Bool) -> Void)? = { _ in }) {
+    public func startAnimation(completion: ((Bool) -> Void)? = { _ in }) {
         UIView.animate(withDuration: duration, animations: {
             if self.transformations.count > 0 {
                 self.view.transform = self.transformations[0]

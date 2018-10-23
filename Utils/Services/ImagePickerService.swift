@@ -105,6 +105,38 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
     }
 }
 
+extension MediaPickerService {
+    
+    struct Constants {
+        static let menuGalleryOptionTitle = "Photo Gallery"
+        static let menuCameraOptionTitle = "Camera"
+        static let menuCancelOptionTitle = "Cancel"
+    }
+    
+    public func setOptionsMenu() -> UIAlertController {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let galleryButton = UIAlertAction(title: Constants.menuGalleryOptionTitle, style: .default, handler: { [unowned self] (action) -> Void in
+            self.showPickerController(for: .photoLibrary)
+        })
+        let cameraButton = UIAlertAction(title: Constants.menuCameraOptionTitle, style: .default, handler: { [unowned self] (action) -> Void in
+            self.showPickerController(for: .camera)
+        })
+        let cancelButton = UIAlertAction(title: Constants.menuCancelOptionTitle, style: .cancel, handler: nil)
+        
+        actionSheet.addAction(galleryButton)
+        actionSheet.addAction(cameraButton)
+        actionSheet.addAction(cancelButton)
+        
+        return actionSheet
+    }
+    
+    private func showPickerController(for type: UIImagePickerControllerSourceType) {
+        self.presentImagePickerController(from: type, for: [.image]) {
+            print("permisionNotGranted")
+        }
+    }
+}
+
 extension MediaPickerService: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {

@@ -47,8 +47,7 @@ public protocol MediaPickerServiceType {
     var mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError> { get }
     
     /**
-     Presents the picker to the user so it can take or select a picture or other media. If there are multiple options
-     for the picker, it shows the menu with the corresponding options.
+     Presents the picker to the user so it can take or select a picture or other media.
      If the user didn't give permission to the app to use the source type selected a prompt asking it will be shown.
      - parameter source: Source type for the picker to show. Can be .camera or .photoLibrary.
      - parameter media: Media types that should be shown in the picker for the user to choose from.
@@ -58,6 +57,13 @@ public protocol MediaPickerServiceType {
                                       for media: [MediaPickerMediaType],
                                       _ onPermissionNotGranted: @escaping () -> Void)
     
+    /**
+     Presents a menu with the options provided to show the picker to the user so it can take or select a picture or other media.
+     If the user didn't give permission to the app to use the source type selected a prompt asking it will be shown.
+     - parameter source: Array of source types for the picker to show. Can be .camera and/or .photoLibrary.
+     - parameter media: Media types that should be shown in the picker for the user to choose from.
+     - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
+     */
     func presentImagePickerController(from source: [UIImagePickerControllerSourceType],
                                       for media: [MediaPickerMediaType],
                                       _ onPermissionNotGranted: @escaping () -> Void)
@@ -109,7 +115,7 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
                                              for media: [MediaPickerMediaType],
                                              _ onPermissionNotGranted: @escaping () -> Void) {
         guard source.count > 1 else {
-            presentImagePickerController(from: source.first!, for: media, onPermissionNotGranted)
+            presentImagePickerController(from: source[0], for: media, onPermissionNotGranted)
             return
         }
         

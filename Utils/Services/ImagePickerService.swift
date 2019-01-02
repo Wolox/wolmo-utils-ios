@@ -77,9 +77,7 @@ public protocol MediaPickerServiceType {
 @objc
 public final class MediaPickerService: NSObject, MediaPickerServiceType {
     
-    struct Constants {
-        static let menuCancelOptionTitle = "Cancel"
-    }
+    static let menuCancelOptionTitle = "Cancel"
     
     public let mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError>
     fileprivate let _mediaObserver: Signal<MediaPickerMedia, MediaPickerServiceError>.Observer
@@ -104,9 +102,11 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
         source.isPermitted().startWithResult { [unowned self] in
             switch $0 {
             case .success(let permitted):
-                if permitted { self.presentImagePickerController(source: source, media: media) }
+                if permitted {
+                    self.presentImagePickerController(source: source, media: media) }
                 else { onPermissionNotGranted() }
-            case .failure(let error): self._mediaObserver.send(error: error)
+            case .failure(let error):
+                self._mediaObserver.send(error: error)
             }
         }
     }
@@ -123,20 +123,12 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
         
         for option in source {
             let button = UIAlertAction(title: option.menuTitle, style: .default, handler: { [unowned self] (action) -> Void in
-                option.isPermitted().startWithResult { [unowned self] in
-                    switch $0 {
-                    case .success(let permitted):
-                        if permitted { self.presentImagePickerController(source: option, media: media) }
-                        else { onPermissionNotGranted() }
-                    case .failure(let error): self._mediaObserver.send(error: error)
-                    }
-                }
-                
+                self.presentImagePickerController(from: option, for: media, onPermissionNotGranted)
             })
             actionSheet.addAction(button)
         }
         
-        let cancelButton = UIAlertAction(title: Constants.menuCancelOptionTitle, style: .cancel, handler: nil)
+        let cancelButton = UIAlertAction(title: MediaPickerService.menuCancelOptionTitle, style: .cancel, handler: nil)
         actionSheet.addAction(cancelButton)
         
         _viewController?.present(actionSheet, animated: true, completion: nil)

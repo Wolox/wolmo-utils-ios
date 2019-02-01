@@ -58,6 +58,17 @@ public protocol MediaPickerServiceType {
                                       _ onPermissionNotGranted: @escaping () -> Void)
     
     /**
+     Presents a menu with the options provided to show the picker to the user so it can take or select a picture or other media.
+     If the user didn't give permission to the app to use the source type selected a prompt asking it will be shown.
+     - parameter source: Array of source types for the picker to show. Can be .camera and/or .photoLibrary.
+     - parameter media: Media types that should be shown in the picker for the user to choose from.
+     - parameter onPermissionNotGranted: Block called if the user denies permission. If the user gives permission the camera will be shown.
+     */
+    func presentImagePickerController(from source: [UIImagePickerControllerSourceType],
+                                      for media: [MediaPickerMediaType],
+                                      _ onPermissionNotGranted: @escaping () -> Void)
+    
+    /**
      Tells if the device has a camera.
      */
     var cameraIsAvailable: Bool { get }
@@ -65,6 +76,8 @@ public protocol MediaPickerServiceType {
 
 @objc
 public final class MediaPickerService: NSObject, MediaPickerServiceType {
+    
+    static let menuCancelOptionTitle = "Cancel"
     
     public let mediaSignal: Signal<MediaPickerMedia, MediaPickerServiceError>
     fileprivate let _mediaObserver: Signal<MediaPickerMedia, MediaPickerServiceError>.Observer
@@ -89,11 +102,36 @@ public final class MediaPickerService: NSObject, MediaPickerServiceType {
         source.isPermitted().startWithResult { [unowned self] in
             switch $0 {
             case .success(let permitted):
-                if permitted { self.presentImagePickerController(source: source, media: media) }
+                if permitted {
+                    self.presentImagePickerController(source: source, media: media) }
                 else { onPermissionNotGranted() }
-            case .failure(let error): self._mediaObserver.send(error: error)
+            case .failure(let error):
+                self._mediaObserver.send(error: error)
             }
         }
+    }
+    
+    public func presentImagePickerController(from source: [UIImagePickerControllerSourceType],
+                                             for media: [MediaPickerMediaType],
+                                             _ onPermissionNotGranted: @escaping () -> Void) {
+        guard source.count > 1 else {
+            presentImagePickerController(from: source[0], for: media, onPermissionNotGranted)
+            return
+        }
+        
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        for option in source {
+            let button = UIAlertAction(title: option.menuTitle, style: .default, handler: { [unowned self] (action) -> Void in
+                self.presentImagePickerController(from: option, for: media, onPermissionNotGranted)
+            })
+            actionSheet.addAction(button)
+        }
+        
+        let cancelButton = UIAlertAction(title: MediaPickerService.menuCancelOptionTitle, style: .cancel, handler: nil)
+        actionSheet.addAction(cancelButton)
+        
+        _viewController?.present(actionSheet, animated: true, completion: nil)
     }
     
     public var cameraIsAvailable: Bool {

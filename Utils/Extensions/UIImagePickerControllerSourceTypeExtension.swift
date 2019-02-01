@@ -14,6 +14,14 @@ import Result
 
 internal extension UIImagePickerControllerSourceType {
     
+    var menuTitle: String {
+        switch self {
+        case .camera: return "Camera"
+        case .photoLibrary: return "Photo Library"
+        case .savedPhotosAlbum: return "Saved Photos Album"
+        }
+    }
+    
     internal func isPermitted() -> SignalProducer<Bool, MediaPickerServiceError> {
         switch self {
         case .camera:

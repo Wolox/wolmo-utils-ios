@@ -9,6 +9,7 @@ WolMo - Utils iOS is a framework which provides specific utilities for iOS used 
   * [Usage](#usage)
     * [ImageFetcher](#image-fetcher)
     * [ImagePickerService](#image-picker-service)
+    * [UserManager] (#user-manager)
   * [Contributing](#contributing)
   * [About](#about)
   * [License](#license)
@@ -47,6 +48,22 @@ If the user denies permission, `ImagePickerService` provides a block that you ca
 The resulting image will be returned in the public signal `imageSignal`.  
 Also you can check if the device has an available camera checking the boolean `cameraAvailable`.  
 As with the other utils, a protocol is provided and implemented by this class (`ImagePickerServiceType`) so you can use it as your type and provide a mock implementation if needed.
+
+### User Manager
+
+The framework provides a [UserManager](Utils/UserManager/UserManager.swift) intended to manage the current user. It also stores the user session exposing a way to update it whenever the user logs in, logs out, updates and expires. These transitions are expected to be handled outside the framework, but always letting UserManager know about them.
+
+When a user is logged in or signed up, `login:` must be called providing the fetched user. This will make `UserManager` know a valid session is being used.
+
+The same way, when the user is logged out, `logout` must be called. This will make `UserManager` remove the stored session token.
+
+The function `update:` receiving a user can be useful to make `UsenManager` store an updated `User`.
+
+### Storing a User
+
+`UserManager` can provide the current user reading the property `currentUser`. This property is set when `bootstrapSession` is called, which must be called only once. 
+
+This function fetches the current user if an instance of [CurrentUserFetcherType](Utils/UserManager/CurrentUserFetcher.swift) is provided. Since the user is not persisted in the device, and only stored in memory the user needs to be fetched every time the application is launched.
 
 ## Contributing
 1. Fork it

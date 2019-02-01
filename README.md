@@ -9,7 +9,7 @@ WolMo - Utils iOS is a framework which provides specific utilities for iOS used 
   * [Usage](#usage)
     * [ImageFetcher](#image-fetcher)
     * [ImagePickerService](#image-picker-service)
-    * [UserManager] (#user-manager)
+    * [UserManager](#user-manager)
   * [Contributing](#contributing)
   * [About](#about)
   * [License](#license)

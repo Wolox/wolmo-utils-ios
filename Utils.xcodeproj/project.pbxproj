@@ -17,6 +17,10 @@
 		B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */; };
 		B845806C1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B845806A1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift */; };
 		B845806D1F7D59370018B9A6 /* URLSessionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */; };
+		B86316312204B231009E1EB9 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86316302204B231009E1EB9 /* UserManager.swift */; };
+		B86316332204B27D009E1EB9 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86316322204B27D009E1EB9 /* KeychainService.swift */; };
+		B86316352204B2B8009E1EB9 /* CurrentUserFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86316342204B2B8009E1EB9 /* CurrentUserFetcher.swift */; };
+		B86316372204B2D0009E1EB9 /* AuthenticableUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86316362204B2D0009E1EB9 /* AuthenticableUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +47,10 @@
 		B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImagePickerService.swift; path = Services/ImagePickerService.swift; sourceTree = "<group>"; };
 		B845806A1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImagePickerControllerSourceTypeExtension.swift; sourceTree = "<group>"; };
 		B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionExtension.swift; sourceTree = "<group>"; };
+		B86316302204B231009E1EB9 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		B86316322204B27D009E1EB9 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		B86316342204B2B8009E1EB9 /* CurrentUserFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserFetcher.swift; sourceTree = "<group>"; };
+		B86316362204B2D0009E1EB9 /* AuthenticableUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticableUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +97,7 @@
 		B83FC6671EF05FB300BF1173 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B863162F2204B206009E1EB9 /* UserManager */,
 				B84580691F7D59370018B9A6 /* Extensions */,
 				B83FC67F1EF0640B00BF1173 /* Services */,
 				B83FC6681EF05FB300BF1173 /* Utils.h */,
@@ -132,6 +141,17 @@
 				B845806B1F7D59370018B9A6 /* URLSessionExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B863162F2204B206009E1EB9 /* UserManager */ = {
+			isa = PBXGroup;
+			children = (
+				B86316302204B231009E1EB9 /* UserManager.swift */,
+				B86316322204B27D009E1EB9 /* KeychainService.swift */,
+				B86316342204B2B8009E1EB9 /* CurrentUserFetcher.swift */,
+				B86316362204B2D0009E1EB9 /* AuthenticableUser.swift */,
+			);
+			path = UserManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,8 +268,12 @@
 			files = (
 				B845806D1F7D59370018B9A6 /* URLSessionExtension.swift in Sources */,
 				B845806C1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift in Sources */,
+				B86316372204B2D0009E1EB9 /* AuthenticableUser.swift in Sources */,
 				B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */,
+				B86316312204B231009E1EB9 /* UserManager.swift in Sources */,
 				B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */,
+				B86316352204B2B8009E1EB9 /* CurrentUserFetcher.swift in Sources */,
+				B86316332204B27D009E1EB9 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

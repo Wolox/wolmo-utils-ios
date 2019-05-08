@@ -86,9 +86,8 @@ class Scanner: NSObject {
         return previewLayer
     }
     
-    // Set here the code types you want to scann
+    // Set here the code types you want to scan
     private func metaObjectTypes() -> [AVMetadataObject.ObjectType] {
-        //TODO: Add all objetc types
         return [.aztec,
                 .code128,
                 .code39,
@@ -152,16 +151,12 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     // MARK: - Camera Session handler
     
-    /**
-     Call this method when you need to start the camera
-     */
+    // Call this method when you need to start the camera
     func startScanner() {
         _scanner?.startCaptureSession()
     }
     
-    /**
-     Call this method when you need to stop the camera
-     */
+    // Call this method when you need to stop the camera
     func stopScanner() {
         _scanner?.stopCaptureSession()
     }

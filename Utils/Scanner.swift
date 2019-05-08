@@ -89,7 +89,20 @@ class Scanner: NSObject {
     // Set here the code types you want to scann
     private func metaObjectTypes() -> [AVMetadataObject.ObjectType] {
         //TODO: Add all objetc types
-        return [.code128]
+        return [.aztec,
+                .code128,
+                .code39,
+                .code39Mod43,
+                .code93,
+                .dataMatrix,
+                .ean13,
+                .ean8,
+                .face,
+                .interleaved2of5,
+                .itf14,
+                .pdf417,
+                .qr,
+                .upce]
     }
     
     // MARK: - Public methods

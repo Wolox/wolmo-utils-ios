@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AECEB4DD228318B30070C01F /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECEB4DC228318B30070C01F /* Scanner.swift */; };
 		B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */; };
 		B83FC66F1EF05FB300BF1173 /* Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B83FC6651EF05FB300BF1173 /* Utils.framework */; };
 		B83FC6741EF05FB300BF1173 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83FC6731EF05FB300BF1173 /* UtilsTests.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AECEB4DC228318B30070C01F /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageFetcher.swift; path = Services/ImageFetcher.swift; sourceTree = "<group>"; };
 		B83FC6651EF05FB300BF1173 /* Utils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Utils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83FC6681EF05FB300BF1173 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				B80AA66E1EFAD8F200FC46A9 /* ImageFetcher.swift */,
 				B83FC68A1EF071BB00BF1173 /* ImagePickerService.swift */,
+				AECEB4DC228318B30070C01F /* Scanner.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				B845806C1F7D59370018B9A6 /* UIImagePickerControllerSourceTypeExtension.swift in Sources */,
 				B86316372204B2D0009E1EB9 /* AuthenticableUser.swift in Sources */,
 				B83FC68B1EF071BB00BF1173 /* ImagePickerService.swift in Sources */,
+				AECEB4DD228318B30070C01F /* Scanner.swift in Sources */,
 				B86316312204B231009E1EB9 /* UserManager.swift in Sources */,
 				B80AA66F1EFAD8F200FC46A9 /* ImageFetcher.swift in Sources */,
 				B86316352204B2B8009E1EB9 /* CurrentUserFetcher.swift in Sources */,
